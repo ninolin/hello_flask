@@ -1,0 +1,41 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: helloflask-deployment
+  namespace: zion-dev
+  labels:
+    app: helloflask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloflask-app
+  template:
+    metadata:
+      labels:
+        app: helloflask-app
+        service: helloflask-service
+    spec:
+      containers:
+        - name: helloflask
+          image: 807200167884.dkr.ecr.us-east-1.amazonaws.com/nino-test:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service                   
+metadata:
+  name: helloflask-service
+  namespace: zion-dev
+spec:
+  ports:
+    - protocol: TCP
+      port: 80                  
+      targetPort: 5000          
+      name: html
+  selector:
+    app: helloflask-app
+  type: LoadBalancer
