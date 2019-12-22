@@ -10,9 +10,9 @@ phases:
     commands:
       - echo pre_build steps...
       - aws --version
-      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - $(aws ecr get-login --no-include-email --region us-east-1)
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $REPOSITORY_URI:latest
+      - docker tag nino-test:latest 807200167884.dkr.ecr.us-east-1.amazonaws.com/nino-test:latest
