@@ -3,16 +3,20 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.7
-    commands:
-      - pip install -r requirements.txt
+      docker: 18
   pre_build:
     commands:
       - echo pre_build steps...
       - aws --version
       - $(aws ecr get-login --no-include-email --region us-east-1)
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...          
+      - docker build -t nino-test:latest .
+      - docker tag nino-test:latest 807200167884.dkr.ecr.us-east-1.amazonaws.com/nino-test:latest 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker tag nino-test:latest 807200167884.dkr.ecr.us-east-1.amazonaws.com/nino-test:latest
+      - docker push 807200167884.dkr.ecr.us-east-1.amazonaws.com/nino-test:latest
